@@ -1,0 +1,327 @@
+{
+	"info": {
+		"_postman_id": "74dde2fd-4f59-43dc-a2fb-a0a47971c62a",
+		"name": "Secure File Sharing",
+		"description": "#### **1\\. Initial Setup**\n\n```\n# Create first Ops user (run in Django shell)\nfrom api.models import User\nUser.objects.create_user(\n    username=\"admin_ops\",\n    password=\"ops_password123\",\n    user_type=\"OPS\",\n    email_verified=True  # Skip verification for Ops\n)\n\n ```\n\n#### **2\\. Client Signup Flow**\n\n1. curl -X POST http://localhost:8000/api/signup/ \\\\-H \"Content-Type: application/json\" \\\\-d '{\"username\":\"client1\", \"password\":\"client123\", \"email\":\"client@example.com\"}'jsonCopyDownload{\"detail\": \"Verification email sent\"}\n    \n    _Returns:_\n    \n2. **Email Verification**\n    \n    - Check console for verification link (development)\n        \n    - bashCopyDownloadcurl -X GET \"http://localhost:8000/api/verify-email/?token=\"\n        \n\n#### **3\\. Authentication**\n\n- curl -X POST http://localhost:8000/api/login/ \\\\-d '{\"username\":\"admin_ops\", \"password\":\"ops_password123\"}'\n    \n    _Copy_ `_access_` _token for uploads_\n    \n- curl -X POST http://localhost:8000/api/login/ \\\\-d '{\"username\":\"client1\", \"password\":\"client123\"}'\n    \n    _Copy_ `_access_` _token for downloads_\n    \n\n#### **4\\. File Operations**\n\n- curl -X POST http://localhost:8000/api/upload/ \\\\-H \"Authorization: Bearer \" \\\\-F \"file=@/path/to/file.docx\"\n    \n    _Returns file ID in response_\n    \n- curl -X GET http://localhost:8000/api/files/ \\\\-H \"Authorization: Bearer \"\n    \n- curl -X GET \"http://localhost:8000/api/download//\" \\\\-H \"Authorization: Bearer \" \\\\--output downloaded_file.docx",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33958758"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/api/signup/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"client1123\",\n    \"password\": \"clientpass123\",\n    \"email\": \"itxhuman@gmail.com\",\n    \"first_name\": \"Client\",\n    \"last_name\": \"User\",\n    \"user_type\": \"CLIENT\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/signup/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"signup",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/login/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"ops1\",\"password\":\"ops123\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/login/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\": \"client1123\", \"password\": \"clientpass123\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8000/api/verify-email/?token=",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/verify-email/?token=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"verify-email",
+						""
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/upload/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxNTI5MzM1LCJpYXQiOjE3NTE1MjkwMzUsImp0aSI6IjA3MDM2MTZjMjczYjQyZjhiYjg3MTJjZGVkZDA2NjFmIiwidXNlcl9pZCI6MX0.F28BkDV2Vkpuu84vU7H6WTtHYIYs_SXHQIIV4c6pKdE"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/D:/sem_course/Back-End Intern Test.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/upload/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"upload",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8000/api/files/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxNTM1MDQ1LCJpYXQiOjE3NTE1MzQ3NDUsImp0aSI6IjY0NTdkODM2ZWYzYjQ1NjRhNGYyNjIyYjRiN2Q5YzM4IiwidXNlcl9pZCI6OH0.HHDXQngCQ2ZiWxsbRYvs_9UZjFz1d94EtRXVIgRsID4"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/files/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"files",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8000/api/download-file/1/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxNTM2MTgwLCJpYXQiOjE3NTE1MzU4ODAsImp0aSI6ImI3YWYzMjI5MjBlZDRmYTY5N2IwMDFkNDVhMDgyMzdmIiwidXNlcl9pZCI6OH0.DO3KB5GzaSJaClQr5ehLBJ_NB-Qim_mqS7JOlAVeLQ8"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/download-file/1/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"download-file",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8000/api/download/37ab445f-9e2f-4d61-83ac-62c08cee9afc/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxNTM3ODM5LCJpYXQiOjE3NTE1Mzc1MzksImp0aSI6IjY0MWQxY2JiYWRmNDQxYmQ4MTU1NDdlMTc3M2JiMzM0IiwidXNlcl9pZCI6OH0.7WxP8nxkKbtuGgut6jiY9GRdhD55VKXe44ORNV2zYVw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/download/37ab445f-9e2f-4d61-83ac-62c08cee9afc/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"download",
+						"37ab445f-9e2f-4d61-83ac-62c08cee9afc",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8000/api/download/d48f6296-63da-4c12-8459-e0880c2f7029/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxNTM5MTMzLCJpYXQiOjE3NTE1Mzg4MzMsImp0aSI6IjY0OGYyMjliMGI0NDQwZDQ5ZWVjNWI3NWY0YTZkYmU0IiwidXNlcl9pZCI6OH0.hPJiXV-w_hbBGSgih8q45_-FfIzatg9L4mP1RZ54Uh0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/download/d48f6296-63da-4c12-8459-e0880c2f7029/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"download",
+						"d48f6296-63da-4c12-8459-e0880c2f7029",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
